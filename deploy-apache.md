@@ -101,7 +101,12 @@ cd laravel-api
 composer install
 cp .env.example .env
 php artisan key:generate
+
+sudo chown -R www-data:www-data storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache
+
 ```
+
 
 ### 2.2 Configurar Apache
 
