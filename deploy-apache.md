@@ -176,6 +176,7 @@ Contenido:
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
+        FallbackResource /index.html
     </Directory>
 
     ErrorLog ${APACHE_LOG_DIR}/frontend_error.log
