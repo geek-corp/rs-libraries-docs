@@ -28,7 +28,6 @@ php8.3-mysql php8.3-xml php8.3-bcmath php8.3-zip libapache2-mod-php8.3 unzip cur
 ```
 
 ```bash
-sudo a2dismod php8.1
 sudo a2enmod php8.3
 sudo systemctl restart apache2
 ```
