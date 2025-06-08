@@ -57,6 +57,38 @@ npm -v
 ```
 
 ---
+### 🔹 MySQL Server
+
+```bash
+sudo apt update
+sudo apt install mysql-server
+sudo systemctl start mysql
+sudo systemctl enable mysql
+```
+
+Acceder como root:
+
+```bash
+sudo mysql
+```
+
+Crear base de datos y usuario:
+
+```sql
+CREATE DATABASE laravel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'laraveluser'@'localhost' IDENTIFIED BY 'claveSegura';
+GRANT ALL PRIVILEGES ON laravel.* TO 'laraveluser'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+Verifica:
+
+```bash
+mysql -u laraveluser -p
+```
+
+---
 
 ## 🌐 2. Desplegar API Laravel en `api.local`
 
