@@ -1,7 +1,7 @@
 
 # 🐳 Docker + Laravel + React + Nginx: Configuración
 
-Este documento contiene la configuración completa para desplegar una API en Laravel y un frontend en React, usando Docker y Nginx como reverse proxy.
+Esta guía contiene la configuración completa para desplegar una API en Laravel y un frontend en React, usando Docker y Nginx como reverse proxy, **con montajes directos desde carpetas locales (bind mounts)** para asegurar que los archivos reales estén accesibles.
 
 ---
 
@@ -26,24 +26,18 @@ Este documento contiene la configuración completa para desplegar una API en Lar
 ```dockerfile
 FROM php:8.2-fpm
 
-# Instala extensiones necesarias para Laravel
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpq-dev libonig-dev libzip-dev \
     && docker-php-ext-install pdo pdo_mysql mbstring zip
 
-# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Crea directorio de la app
 WORKDIR /var/www/api
 
-# Copia archivos
 COPY . .
 
-# Instala dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Da permisos (si no usas volumen de host)
 RUN chown -R www-data:www-data /var/www/api \
     && chmod -R 755 /var/www/api
 
@@ -67,7 +61,6 @@ COPY . .
 
 RUN npm run build
 
-# Esto solo produce el build, el Nginx es el que lo sirve
 CMD ["echo", "Build complete."]
 ```
 
@@ -119,7 +112,7 @@ Editar el archivo `C:\Windows\System32\drivers\etc\hosts` y agregar:
 
 ---
 
-## 🐳 docker-compose.yml
+## 🐳 docker-compose.yml (Corregido con Bind Mounts)
 
 ```yaml
 version: '3.8'
@@ -131,8 +124,8 @@ services:
       - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - react_build:/var/www/frontend:ro
-      - laravel_public:/var/www/api:ro
+      - ./frontend/build:/var/www/frontend:ro
+      - ./backend/public:/var/www/api:ro
     depends_on:
       - frontend
       - backend
@@ -143,7 +136,7 @@ services:
     build:
       context: ./frontend
     volumes:
-      - react_build:/app/build
+      - ./frontend/build:/app/build
     networks:
       - appnet
     command: ["npm", "run", "build"]
@@ -152,7 +145,7 @@ services:
     build:
       context: ./backend
     volumes:
-      - laravel_public:/var/www/api/public
+      - ./backend:/var/www/api
     networks:
       - appnet
     environment:
@@ -175,8 +168,6 @@ services:
 
 volumes:
   db_data:
-  react_build:
-  laravel_public:
 
 networks:
   appnet:
@@ -201,4 +192,4 @@ docker-compose up --build
 
 ## 🎉 ¡Listo!
 
-Ya tienes un entorno completo de Laravel + React usando Docker, con Nginx como reverse proxy y dominios locales simulados.
+Con esta configuración, tus contenedores Docker estarán sirviendo archivos reales desde tu proyecto local, con Nginx como proxy y dominios personalizados simulados.
