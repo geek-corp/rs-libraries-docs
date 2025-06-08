@@ -1,5 +1,5 @@
 
-# 🛠️ Despliegue de una API Laravel + Frontend React en Ubuntu (WSL) con Dominios Simulados
+# 🛠️ Despliegue de una API Laravel + Frontend React en Ubuntu (WSL) con Dominios Simulados (PHP 8.3 + Node 22)
 
 Esta guía te permite desplegar una API desarrollada en Laravel y un frontend hecho en React en un entorno **Ubuntu dentro de WSL**, simulando dominios personalizados usando `hosts` locales y configurando Apache.
 
@@ -9,18 +9,46 @@ Esta guía te permite desplegar una API desarrollada en Laravel y un frontend he
 
 - Tener **WSL2 con Ubuntu** instalado.
 - Tener los proyectos Laravel y React listos.
-- Instalar Apache, PHP, Composer, Node.js y npm.
+- Instalar Apache, PHP 8.3, Composer, Node.js (v22) y npm.
 
 ---
 
-## 🔧 1. Configuración del Entorno
+## 🔧 1. Configuración del Entorno (PHP 8.3 y Node.js 22)
+
+### 🔹 PHP 8.3
 
 ```bash
-sudo apt update && sudo apt upgrade
-sudo apt install apache2 php php-mysql php-cli php-curl php-mbstring php-xml php-bcmath php-zip unzip curl git composer npm
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:ondrej/php -y
+sudo apt update
+
+sudo apt install apache2 php8.3 php8.3-cli php8.3-common php8.3-curl php8.3-mbstring \
+php8.3-mysql php8.3-xml php8.3-bcmath php8.3-zip libapache2-mod-php8.3 unzip curl git composer
 ```
 
-Verifica:
+```bash
+sudo a2dismod php8.1
+sudo a2enmod php8.3
+sudo systemctl restart apache2
+```
+
+### 🔹 Node.js 22 (usando NVM)
+
+```bash
+# Instalar NVM (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+# Recargar perfil
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Instalar Node.js 22
+nvm install 22
+nvm use 22
+```
+
+Verifica versiones:
 
 ```bash
 php -v
@@ -170,5 +198,4 @@ fetch(`${process.env.REACT_APP_API_URL}/usuarios`)
 
 ## 🎉 ¡Listo!
 
-Ya tienes una API y un frontend corriendo en WSL como si fuera producción, con dominios simulados usando `hosts`.
-
+Ya tienes una API y un frontend corriendo en WSL como si fuera producción, con PHP 8.3, Node.js 22 y dominios simulados usando `hosts`.
