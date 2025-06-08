@@ -155,19 +155,19 @@ sudo systemctl reload apache2
 
 ---
 
-## 🧭 4. Configurar `/etc/hosts`
-
+## 🧭 4. Configurar `/etc/hosts` si desean probar configuración solamente en LOCAL Windows
+### en el gestor de archivos Ir a 
 ```bash
-sudo nano /etc/hosts
+C:\Windows\System32\drivers\etc\hosts
 ```
 
 Agrega al final:
 
 ```
-127.0.0.1 api.local
-127.0.0.1 frontend.local
+172.26.xx.xx  api.local
+172.26.xx.xx  frontend.local
 ```
-
+(Sustituye xx.xx por lo que te dé wsl hostname -I)
 ---
 
 ## 🧪 5. Probar en el Navegador
